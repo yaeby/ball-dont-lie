@@ -13,24 +13,28 @@ export const usePlayerStore = defineStore("players", {
             perPage: 24,
             hasNextPage: false,
             hasPreviousPage: false,
-            totalPages: 0,
-            currentPage: 1
+            pageNumber: 1 
         },
         searchParams: {
             search: '',
             firstName: '',
             lastName: '',
             teamIds: [],
-        }
+        },
+        previousCursors: []
     }),
 
     actions: {
         async fetchPlayers(params = {}) {
             try {
+                if (params.perPage) {
+                    this.pagination.perPage = params.perPage;
+                }
+                
                 const queryParams = {
-                    per_page: params.perPage || this.pagination.perPage,
-                    cursor: params.cursor || this.pagination.cursor,
-                    search: params.search || this.searchParams.search,
+                    per_page: this.pagination.perPage,
+                    cursor: params.cursor,
+                    search: params.search !== undefined ? params.search : this.searchParams.search,
                     first_name: params.firstName || this.searchParams.firstName,
                     last_name: params.lastName || this.searchParams.lastName,
                 };
@@ -45,21 +49,30 @@ export const usePlayerStore = defineStore("players", {
                     }
                 });
                 
+                // If we're doing a fresh search/filter, reset the cursors and page tracking
+                if (!params.cursor) {
+                    this.previousCursors = [];
+                    this.pagination.pageNumber = 1;
+                    this.pagination.hasPreviousPage = false;
+                }
+                
                 const response = await api.nba.getPlayers(queryParams);
                 
                 if (response && response.data) {
                     this.players = response.data;
                     
                     if (response.meta) {
+                        if (this.pagination.cursor) {
+                            this.previousCursors.push(this.pagination.cursor);
+                        }
+                        
                         this.pagination.cursor = response.meta.next_cursor;
                         this.pagination.hasNextPage = !!response.meta.next_cursor;
-                        this.pagination.hasPreviousPage = params.cursor !== null;
-                        this.pagination.currentPage = params.page || 1;
-                        this.pagination.totalPages = Math.ceil(response.meta.total_count / this.pagination.perPage);
+                        this.pagination.hasPreviousPage = this.previousCursors.length > 0;
                     }
                     
                     this.searchParams = {
-                        search: params.search || this.searchParams.search,
+                        search: params.search !== undefined ? params.search : this.searchParams.search,
                         firstName: params.firstName || this.searchParams.firstName,
                         lastName: params.lastName || this.searchParams.lastName,
                         teamIds: params.teamIds || this.searchParams.teamIds
@@ -74,21 +87,25 @@ export const usePlayerStore = defineStore("players", {
         
         async fetchNextPage() {
             if (this.pagination.hasNextPage) {
-                await this.fetchPlayers({ 
-                    cursor: this.pagination.cursor,
-                    page: this.pagination.currentPage + 1 
-                });
+                this.pagination.pageNumber++;
+                await this.fetchPlayers({ cursor: this.pagination.cursor });
             }
         },
         
         async fetchPreviousPage() {
-            if (this.pagination.currentPage > 1) {
-                await this.fetchPlayers({ page: 1 });
+            if (this.pagination.hasPreviousPage && this.previousCursors.length > 0) {
+                const previousCursor = this.previousCursors.pop();
+                this.pagination.pageNumber--;
                 
-                let targetPage = this.pagination.currentPage - 1;
-                for (let i = 1; i < targetPage; i++) {
-                    await this.fetchNextPage();
+                const cursorToUse = this.previousCursors.length > 0 
+                    ? this.previousCursors[this.previousCursors.length - 1] 
+                    : null;
+                    
+                if (this.previousCursors.length > 0) {
+                    this.previousCursors.pop();
                 }
+                
+                await this.fetchPlayers({ cursor: cursorToUse });
             }
         }
     },

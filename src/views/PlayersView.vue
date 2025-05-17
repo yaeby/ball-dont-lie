@@ -21,7 +21,6 @@ const pagination = computed(() => playerStore.pagination || {
     perPage: 24,
     hasNextPage: false,
     hasPreviousPage: false,
-    totalPages: 0,
     currentPage: 1
 });
 
@@ -41,13 +40,19 @@ const handlePrevPage = async () => {
 
 const handleSearch = async () => {
     loading.value = true;
-    await playerStore.fetchPlayers({ search: searchQuery.value });
+    await playerStore.fetchPlayers({ 
+        search: searchQuery.value,
+        perPage: pagination.value.perPage 
+    });
     loading.value = false;
 };
 
 const changePerPage = async (perPage) => {
     loading.value = true;
-    await playerStore.fetchPlayers({ perPage });
+    await playerStore.fetchPlayers({ 
+        perPage,
+        search: searchQuery.value 
+    });
     loading.value = false;
 };
 </script>
@@ -128,7 +133,7 @@ const changePerPage = async (perPage) => {
             </button>
             
             <span class="text-gray-800 dark:text-gray-200">
-                Page {{ pagination.currentPage }} of {{ pagination.totalPages || '?' }}
+                Page {{ pagination.pageNumber }}
             </span>
             
             <button 
