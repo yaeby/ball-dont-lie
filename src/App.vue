@@ -8,7 +8,6 @@ const route = useRoute();
 
 <template>
     <div class="dark:bg-gray-900">
-
         <NavBar />
         <router-view class="pt-20"/> 
     </div>
