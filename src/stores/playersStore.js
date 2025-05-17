@@ -10,7 +10,7 @@ export const usePlayerStore = defineStore("players", {
         players: [],
         pagination: {
             cursor: null,
-            perPage: 25,
+            perPage: 24,
             hasNextPage: false,
             hasPreviousPage: false,
             totalPages: 0,

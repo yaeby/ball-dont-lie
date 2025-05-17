@@ -18,7 +18,7 @@ onMounted(async () => {
 const players = computed(() => playerStore.players);
 const pagination = computed(() => playerStore.pagination || {
     cursor: null,
-    perPage: 25,
+    perPage: 24,
     hasNextPage: false,
     hasPreviousPage: false,
     totalPages: 0,
@@ -80,10 +80,10 @@ const changePerPage = async (perPage) => {
                 :value="pagination.perPage"
                 class="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
             >
-                <option value="10">10 per page</option>
-                <option value="25">25 per page</option>
-                <option value="50">50 per page</option>
-                <option value="100">100 per page</option>
+                <option value="8">8 per page</option>
+                <option value="24">24 per page</option>
+                <option value="40">40 per page</option>
+                <option value="80">80 per page</option>
             </select>
         </div>
 
