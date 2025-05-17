@@ -8,7 +8,7 @@ export const useLogoStore = () => {
     const getTeamLogo = (abbreviation) => {
         try {
             const path = `../assets/${abbreviation}.svg`;
-            return logoModules[path];
+            return logoModules[path].default;
         } catch (error) {
             console.error(`Error getting logo for ${abbreviation}:`, error);
         }

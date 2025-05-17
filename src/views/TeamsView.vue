@@ -1,20 +1,20 @@
 <script setup>
-    import { ref, onMounted, computed } from 'vue';
-    import { useTeamStore } from '../stores/teamStore';
-    import { useLogoStore } from '../stores/logoStore';
+import { ref, onMounted, computed } from 'vue';
+import { useTeamStore } from '../stores/teamStore';
+import { useLogoStore } from '../stores/logoStore';
 
-    const teamStore = useTeamStore();
-    const logoStore = useLogoStore();
-    const loading = ref(true);
+const teamStore = useTeamStore();
+const logoStore = useLogoStore();
+const loading = ref(true);
 
-    onMounted(async () => {
-        if (teamStore.teams.length === 0) {
-            await teamStore.fetchTeams();
-        }
-        loading.value = false;
-    });
+onMounted(async () => {
+    if (teamStore.teams.length === 0) {
+        await teamStore.fetchTeams();
+    }
+    loading.value = false;
+});
 
-    const teams = computed(() => teamStore.teams);
+const teams = computed(() => teamStore.teams);
 </script>
 
 <template>

@@ -14,11 +14,9 @@ export const useTeamStore = defineStore('teams', {
         async fetchTeams() {
             try {
                 const response = await api.nba.getTeams();
-                const allTeams = Array.isArray(response) ? response : 
-                            (response.data ? response.data : []);
+                const allTeams = Array.isArray(response) ? response : (response.data ? response.data : []);
                 
                 this.teams = allTeams.filter(team => team.city && team.city.trim() !== null);
-                
                 console.log("Teams fetched successfully:", this.teams);
             } catch (error) {
                 console.error("Error fetching teams:", error);
