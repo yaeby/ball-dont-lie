@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue';
-
 const features = ref([
   {
     title: "Search Players & Teams",

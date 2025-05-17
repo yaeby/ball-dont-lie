@@ -5,6 +5,33 @@ import { useTeamStore } from '../stores/teamStore';
 const teamStore = useTeamStore();
 const loading = ref(true);
 
+const logoModules = import.meta.glob('../assets/*.svg', { eager: true });
+
+const getTeamLogo = (abbreviation) => {
+  try {
+    const path = `../assets/${abbreviation}.svg`;
+    
+    if (logoModules[path]) {
+      const module = logoModules[path];
+            
+    //   if (typeof module === 'string') {
+    //     return module;
+    //   } 
+    //   else if (module.default && typeof module.default === 'string') {
+    //     return module.default;
+    //   } 
+    //   else if (module.src && typeof module.src === 'string') {
+    //     return module.src;
+    //   }
+    return module.default;
+    }
+  } catch (error) {
+    console.error(`Error getting logo for ${abbreviation}:`, error);
+  }
+  
+  return null;
+};
+
 onMounted(async () => {
   if (teamStore.teams.length === 0) {
     await teamStore.fetchTeams();
@@ -34,7 +61,7 @@ const teams = computed(() => teamStore.teams);
         class="bg-white dark:bg-gray-950 rounded-lg shadow-md p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
       >
         <img 
-          :src="`https://cdn.nba.com/logos/nba/${team.id + 1610612736}/global/L/logo.svg`" 
+          :src="getTeamLogo(team.abbreviation)" 
           :alt="`${team.full_name} logo`" 
           class="h-32 w-32 mx-auto mb-4 object-contain"
         />
