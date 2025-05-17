@@ -3,24 +3,46 @@ const logoModules = import.meta.glob('../assets/*.svg', { eager: true });
 export const useLogoStore = () => {
   /**
    * @param {string} abbreviation 
-   * @returns {string|null}
+   * @returns {string}
    */
   const getTeamLogo = (abbreviation) => {
     try {
-      const path = `../assets/${abbreviation}.svg`;
-      
-      if (logoModules[path]) {
-        const module = logoModules[path];
-        return module.default;
-      }
+        const path = `../assets/${abbreviation}.svg`;
+        return logoModules[path];
     } catch (error) {
       console.error(`Error getting logo for ${abbreviation}:`, error);
     }
+  };
+
+  /**
+   * @param {string} abbreviation 
+   * @returns {boolean} 
+   */
+  const hasLogo = (abbreviation) => {
+    const path = `../assets/${abbreviation}.svg`;
+    return !!logoModules[path];
+  };
+
+  /**
+   * @returns {Object} 
+   */
+  const getAllLogos = () => {
+    const logos = {};
     
-    return null;
+    Object.keys(logoModules).forEach(path => {
+      const match = path.match(/\/([A-Z]{3})\.svg$/);
+      if (match && match[1]) {
+        const abbreviation = match[1];
+        logos[abbreviation] = logoModules[path].default;
+      }
+    });
+    
+    return logos;
   };
 
   return {
-    getTeamLogo
+    getTeamLogo,
+    hasLogo,
+    getAllLogos
   };
 };
