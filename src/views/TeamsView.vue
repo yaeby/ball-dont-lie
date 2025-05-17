@@ -13,16 +13,6 @@ const getTeamLogo = (abbreviation) => {
     
     if (logoModules[path]) {
       const module = logoModules[path];
-            
-    //   if (typeof module === 'string') {
-    //     return module;
-    //   } 
-    //   else if (module.default && typeof module.default === 'string') {
-    //     return module.default;
-    //   } 
-    //   else if (module.src && typeof module.src === 'string') {
-    //     return module.src;
-    //   }
     return module.default;
     }
   } catch (error) {
