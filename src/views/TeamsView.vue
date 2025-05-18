@@ -33,7 +33,7 @@ const teams = computed(() => teamStore.teams);
             <div 
                 v-for="team in teams" 
                 :key="team.id" 
-                class="bg-white dark:bg-gray-950 rounded-lg shadow-md p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
             >
                 <img 
                     :src="logoStore.getTeamLogo(team.abbreviation)" 

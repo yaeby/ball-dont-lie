@@ -49,7 +49,6 @@ export const usePlayerStore = defineStore("players", {
                     }
                 });
                 
-                // If we're doing a fresh search/filter, reset the cursors and page tracking
                 if (!params.cursor) {
                     this.previousCursors = [];
                     this.pagination.pageNumber = 1;

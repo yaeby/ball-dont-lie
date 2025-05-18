@@ -3,15 +3,22 @@ import { ref, onMounted, computed } from 'vue';
 import { usePlayerStore } from '../stores/playersStore';
 import { useLogoStore } from '../stores/logoStore';
 import { useDreamTeamStore } from '../stores/dreamTeam';
+import PositionModal from '../components/PositionModal.vue';
 
 const playerStore = usePlayerStore();
-const logoStore = useLogoStore();
 const dreamTeamStore = useDreamTeamStore();
+const logoStore = useLogoStore();
 const loading = ref(true);
 const searchQuery = ref('');
 const notificationMessage = ref('');
-const showNotification = ref(false);
 
+const selectedPlayer = ref(null);
+const availablePositions = ref([]);
+
+const showNotification = ref(false);
+const showPositionModal = ref(false);
+
+const notificationClass = ref('bg-green-500');
 const notify = (message, isSuccess = true) => {
     notificationMessage.value = message;
     notificationClass.value = isSuccess ? 'bg-green-500' : 'bg-red-500';
@@ -21,29 +28,31 @@ const notify = (message, isSuccess = true) => {
     }, 3000);
 };
 
-const addToDreamTeam = (player) => {
-    const result = dreamTeamStore.addPlayer(player);
-    notify(result.message, result.success);
+const openPositionModal = (player) => {
+    selectedPlayer.value = player;
+    availablePositions.value = dreamTeamStore.getCompatiblePositions(player.position);
+    showPositionModal.value = true;
 };
 
-const addToPosition = (player, position) => {
+const closePositionModal = () => {
+    showPositionModal.value = false;
+    selectedPlayer.value = null;
+};
+
+const selectPosition = (player, position) => {
     const result = dreamTeamStore.addPlayerToPosition(player, position);
     notify(result.message, result.success);
+    showPositionModal.value = false;
 };
 
-const showPositionDropdown = ref(false);
-const selectedPlayer = ref(null);
-
-const openPositionDropdown = (player) => {
-    selectedPlayer.value = player;
-    showPositionDropdown.value = true;
+const removePlayer = (playerId) => {
+    const result = dreamTeamStore.removePlayer(playerId);
+    notify(result.message, result.success);
 };
 
 const isInDreamTeam = (playerId) => {
     return dreamTeamStore.isPlayerInDreamTeam(playerId);
 };
-
-const notificationClass = ref('bg-green-500');
 
 onMounted(async () => {
     if (playerStore.players.length === 0) {
@@ -95,40 +104,26 @@ const changePerPage = async (perPage) => {
 </script>
 
 <template>
-    <div class="container mx-auto px-4 py-16">
+    <div class="container mx-auto px-4 py-16 min-h-full">
         <!-- Notification -->
         <div v-if="showNotification" 
              :class="[notificationClass, 'fixed top-4 right-4 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity']">
             {{ notificationMessage }}
         </div>
         
-        <!-- Position Selection Dropdown Modal -->
-        <div v-if="showPositionDropdown" class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center z-50">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-md w-full">
-                <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                    Choose position for {{ selectedPlayer?.first_name }} {{ selectedPlayer?.last_name }}
-                </h3>
-                <div class="grid grid-cols-1 gap-3 mb-4">
-                    <button 
-                        v-for="position in ['PG', 'SG', 'SF', 'PF', 'C']" 
-                        :key="position"
-                        @click="addToPosition(selectedPlayer, position); showPositionDropdown = false"
-                        class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                        {{ position }}: {{ dreamTeamStore.positionLabels[position] }}
-                    </button>
-                </div>
-                <button 
-                    @click="showPositionDropdown = false" 
-                    class="w-full py-2 px-4 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-gray-600"
-                >
-                    Cancel
-                </button>
-            </div>
-        </div>
+        <!-- Position Selection Modal Component -->
+        <PositionModal
+            :show="showPositionModal"
+            :player="selectedPlayer"
+            :dream-team-store="dreamTeamStore"
+            :available-positions="availablePositions"
+            @close="closePositionModal"
+            @select-position="selectPosition"
+        />
         
-        <!-- Search Bar -->
-        <div class="mb-8 flex justify-center">
+        <!-- Search and Pagination Controls -->
+        <div class="mb-8 flex justify-between items-center">
+            <div class="w-1/4"></div> <!-- Empty div for spacing -->
             <div class="relative w-full max-w-md">
                 <input 
                     v-model="searchQuery"
@@ -144,20 +139,18 @@ const changePerPage = async (perPage) => {
                     Search
                 </button>
             </div>
-        </div>
-        
-        <!-- Results per page selector -->
-        <div class="mb-6 flex justify-end" v-if="pagination">
-            <select 
-                @change="changePerPage(parseInt($event.target.value))" 
-                :value="pagination.perPage"
-                class="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
-            >
-                <option value="8">8 per page</option>
-                <option value="24">24 per page</option>
-                <option value="40">40 per page</option>
-                <option value="80">80 per page</option>
-            </select>
+            <div class="w-1/4 flex justify-end" v-if="pagination">
+                <select 
+                    @change="changePerPage(parseInt($event.target.value))" 
+                    :value="pagination.perPage"
+                    class="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
+                >
+                    <option value="8">8 per page</option>
+                    <option value="24">24 per page</option>
+                    <option value="40">40 per page</option>
+                    <option value="80">80 per page</option>
+                </select>
+            </div>
         </div>
 
         <div v-if="loading" class="text-center text-xl text-gray-600 dark:text-gray-300 py-12">
@@ -172,7 +165,7 @@ const changePerPage = async (perPage) => {
             <div 
                 v-for="player in players" 
                 :key="player.id" 
-                class="bg-white dark:bg-gray-950 rounded-lg shadow-md p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 relative"
+                class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 relative"
             >
                 <!-- Dream Team Badge -->
                 <div v-if="isInDreamTeam(player.id)" 
@@ -193,13 +186,13 @@ const changePerPage = async (perPage) => {
                     <p class="mb-2"><span class="font-semibold">Team:</span> {{ player.team.full_name }}</p>
                     
                     <!-- Dream Team Buttons -->
-                    <div class="mt-2 flex gap-2">
+                    <div class="mt-2 flex justify-center gap-2">
                         <button
                             v-if="!isInDreamTeam(player.id)"
-                            @click="openPositionDropdown(player)"
+                            @click="openPositionModal(player)"
                             class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                         >
-                            Choose Position
+                            Add to Team
                         </button>
                         <button
                             v-else

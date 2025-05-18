@@ -23,7 +23,7 @@ const features = ref([
 <template>
     <div class="container mx-auto px-4 py-16">
 
-        <section class="bg-gradient-to-r from-blue-900 to-red-900 dark:from-gray-950 dark:to-black rounded-lg shadow-xl mb-12 text-white">
+        <section class="bg-gradient-to-r from-blue-900 to-red-900 dark:from-blue-950 dark:to-black rounded-lg shadow-xl mb-12 text-white">
             <div class="px-6 py-16 text-center">
                 <h1 class="text-5xl font-bold mb-4">Ball Don't Lie</h1>
                 <p class="text-xl mb-8 text-gray-300">Your complete NBA stats and player management platform</p>
@@ -59,7 +59,7 @@ const features = ref([
         <section class="bg-white dark:bg-gray-950 rounded-lg p-8 text-center shadow-md">
             <h2 class="text-2xl font-bold mb-4 text-black dark:text-white">Get Started</h2>
             <p class="text-gray-600 dark:text-gray-300">
-                Ready to dive in? Use the search bar in the navigation to find players or teams and start exploring stats!
+                Ready to dive in? Explore teams, find players, create your perfect team with your favorite players!
             </p>
         </section>
     </div>
