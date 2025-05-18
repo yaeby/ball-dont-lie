@@ -104,7 +104,7 @@ const changePerPage = async (perPage) => {
 </script>
 
 <template>
-    <div class="container mx-auto px-4 py-16 min-h-full">
+    <div class="container mx-auto pt-6 pb-16 min-h-full">
         <!-- Notification -->
         <div v-if="showNotification" 
              :class="[notificationClass, 'fixed top-4 right-4 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity']">
@@ -122,7 +122,7 @@ const changePerPage = async (perPage) => {
         />
         
         <!-- Search and Pagination Controls -->
-        <div class="mb-8 flex justify-between items-center">
+        <div class="mb-12 flex justify-between items-center">
             <div class="w-1/4"></div> <!-- Empty div for spacing -->
             <div class="relative w-full max-w-md">
                 <input 
@@ -134,7 +134,7 @@ const changePerPage = async (perPage) => {
                 />
                 <button 
                     @click="handleSearch" 
-                    class="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 py-1 bg-black dark:bg-blue-600 hover:bg-gray-800 dark:hover:bg-blue-700 text-white rounded"
                 >
                     Search
                 </button>
