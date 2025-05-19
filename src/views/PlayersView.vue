@@ -173,12 +173,15 @@ const changePerPage = async (perPage) => {
                     In Team
                 </div>
                 
-                <img 
-                    :src="logoStore.getTeamLogo(player.team.abbreviation)" 
-                    :alt="`${player.team.full_name} logo`" 
-                    class="h-32 w-32 mx-auto mb-4 object-contain"
-                />
-                <h2 class="text-xl font-bold mb-3 text-gray-800 dark:text-white text-center">{{ player.first_name }} {{ player.last_name }}</h2>
+                <router-link :to="`/players/${player.id}`" class="block">
+                    <img 
+                        :src="logoStore.getTeamLogo(player.team.abbreviation)" 
+                        :alt="`${player.team.full_name} logo`" 
+                        class="h-32 w-32 mx-auto mb-4 object-contain"
+                    />
+                    <h2 class="text-xl font-bold mb-3 text-gray-800 dark:text-white text-center">{{ player.first_name }} {{ player.last_name }}</h2>
+                </router-link>
+                
                 <div class="text-gray-600 dark:text-gray-300 text-center">
                     <p class="mb-2"><span class="font-semibold">Jersey:</span> {{ player.jersey_number }}</p>
                     <p class="mb-2"><span class="font-semibold">Position:</span> {{ player.position }}</p>

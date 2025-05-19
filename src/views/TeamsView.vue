@@ -1,10 +1,12 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { useTeamStore } from '../stores/teamStore';
 import { useLogoStore } from '../stores/logoStore';
 
 const teamStore = useTeamStore();
 const logoStore = useLogoStore();
+const router = useRouter();
 const loading = ref(true);
 
 onMounted(async () => {
@@ -15,6 +17,10 @@ onMounted(async () => {
 });
 
 const teams = computed(() => teamStore.teams);
+
+function goToTeamDetails(teamId) {
+    router.push(`/teams/${teamId}`);
+}
 </script>
 
 <template>
@@ -33,7 +39,8 @@ const teams = computed(() => teamStore.teams);
             <div 
                 v-for="team in teams" 
                 :key="team.id" 
-                class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
+                @click="goToTeamDetails(team.id)"
             >
                 <img 
                     :src="logoStore.getTeamLogo(team.abbreviation)" 
