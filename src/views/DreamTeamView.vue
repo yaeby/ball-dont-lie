@@ -220,7 +220,6 @@ const clearTeam = () => {
     backdrop-filter: blur(2px);
 }
 
-/* Ensuring the remove button transition is smooth */
 .player-card button {
     transition: opacity 0.2s ease-in-out;
 }
