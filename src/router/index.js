@@ -3,6 +3,7 @@ import HomeView  from '../views/HomeView.vue'
 import TeamsView from '../views/TeamsView.vue';
 import PlayersView from '../views/PlayersView.vue';
 import DreamTeamView from '../views/DreamTeamView.vue';
+import TeamDetails from '../views/TeamDetails.vue';
 
 const routes = [
 {
@@ -14,6 +15,12 @@ const routes = [
   path: "/teams",
   name: "Teams",
   component: TeamsView,
+},
+{
+  path: "/teams/:id",
+  name: "TeamDetails",
+  component: TeamDetails,
+  props: true,
 },
 {
   path: "/players",

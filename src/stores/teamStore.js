@@ -7,7 +7,8 @@ const api = new BalldontlieAPI({ apiKey: API_KEY });
 
 export const useTeamStore = defineStore('teams', {
     state: () => ({
-        teams: []
+        teams: [],
+        currentTeam: null
     }),
     
     actions: {
@@ -21,6 +22,29 @@ export const useTeamStore = defineStore('teams', {
             } catch (error) {
                 console.error("Error fetching teams:", error);
             }
+        },
+        
+        async fetchTeamById(id) {
+            try {
+                // First check if we already have the team in the teams array
+                const existingTeam = this.teams.find(team => team.id === parseInt(id));
+                if (existingTeam) {
+                    this.currentTeam = existingTeam;
+                    return existingTeam;
+                }
+                
+                // If not found in current teams array, fetch it from the API
+                const response = await api.nba.getTeamById({ id: parseInt(id) });
+                this.currentTeam = response;
+                return response;
+            } catch (error) {
+                console.error(`Error fetching team with id ${id}:`, error);
+                return null;
+            }
+        },
+        
+        clearCurrentTeam() {
+            this.currentTeam = null;
         }
     },
 })
