@@ -8,6 +8,7 @@ const api = new BalldontlieAPI({ apiKey: API_KEY });
 export const usePlayerStore = defineStore("players", {
     state: () => ({
         players: [],
+        currentPlayer: null,
         pagination: {
             cursor: null,
             perPage: 24,
@@ -82,6 +83,29 @@ export const usePlayerStore = defineStore("players", {
             } catch (error) {
                 console.error("Error fetching players:", error);
             }
+        },
+        
+        async fetchPlayerById(id) {
+            try {
+                // First check if we already have the player in our array
+                const existingPlayer = this.players.find(player => player.id === parseInt(id));
+                if (existingPlayer) {
+                    this.currentPlayer = existingPlayer;
+                    return existingPlayer;
+                }
+                
+                // If not found in current players array, fetch from API
+                const response = await api.nba.getPlayerById({ id: parseInt(id) });
+                this.currentPlayer = response;
+                return response;
+            } catch (error) {
+                console.error(`Error fetching player with id ${id}:`, error);
+                return null;
+            }
+        },
+        
+        clearCurrentPlayer() {
+            this.currentPlayer = null;
         },
         
         async fetchNextPage() {
