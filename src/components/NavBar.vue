@@ -4,7 +4,6 @@ import { initFlowbite } from 'flowbite';
 
 const isDark = ref(false);
 
-// Check for saved theme preference or system preference
 onBeforeMount(() => {
     if (localStorage.getItem('color-theme') === 'dark' || 
         (!localStorage.getItem('color-theme') && 
@@ -22,10 +21,8 @@ onMounted(() => {
 });
 
 const toggleTheme = () => {
-    // Toggle theme
     isDark.value = !isDark.value;
     
-    // Update DOM and localStorage
     if (isDark.value) {
         document.documentElement.classList.add('dark');
         localStorage.setItem('color-theme', 'dark');
