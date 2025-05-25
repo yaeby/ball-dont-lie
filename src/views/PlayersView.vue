@@ -193,7 +193,7 @@ const changePerPage = async (perPage) => {
                         <button
                             v-if="!isInDreamTeam(player.id)"
                             @click="openPositionModal(player)"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                            class="px-4 py-2 text-white rounded-md bg-black hover:bg-gray-800 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
                         >
                             Add to Team
                         </button>
@@ -214,7 +214,7 @@ const changePerPage = async (perPage) => {
             <button 
                 @click="handlePrevPage" 
                 :disabled="!pagination.hasPreviousPage"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-colors"
+                class="px-4 py-2 text-white rounded-lg bg-black hover:bg-gray-800 dark:bg-blue-600 dark:hover:bg-blue-700disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 :class="{ 'opacity-50 cursor-not-allowed': !pagination.hasPreviousPage }"
             >
                 Previous Page
@@ -227,7 +227,7 @@ const changePerPage = async (perPage) => {
             <button 
                 @click="handleNextPage" 
                 :disabled="!pagination.hasNextPage"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-colors"
+                class="px-4 py-2 text-white rounded-lg bg-black hover:bg-gray-800 dark:bg-blue-600 dark:hover:bg-blue-700  disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 :class="{ 'opacity-50 cursor-not-allowed': !pagination.hasNextPage }"
             >
                 Next Page

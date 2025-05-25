@@ -89,7 +89,7 @@ onMounted(async () => {
                         <!-- Back Button -->
                         <router-link 
                             to="/teams" 
-                            class="inline-block px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors mt-4"
+                            class="inline-block px-6 py-2 text-white rounded-md bg-black hover:bg-gray-800 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors mt-4"
                         >
                             Back to Teams
                         </router-link>
