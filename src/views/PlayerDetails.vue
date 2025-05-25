@@ -158,7 +158,7 @@ onMounted(async () => {
                                         v-for="position in availablePositions" 
                                         :key="position"
                                         @click="addToDreamTeam(position)"
-                                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                                        class="px-4 py-2 text-white rounded-md bg-black hover:bg-gray-800 dark:bg-blue-600 dark:hover:bg-blue-700transition-colors"
                                     >
                                         {{ position }}
                                     </button>
@@ -183,7 +183,7 @@ onMounted(async () => {
                             </router-link>
                             <router-link 
                                 :to="`/teams/${player.team.id}`"
-                                class="inline-block px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                                class="inline-block px-6 py-2 text-white rounded-md bg-black hover:bg-gray-800 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
                             >
                                 View Team
                             </router-link>
